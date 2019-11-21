@@ -38,24 +38,16 @@ class Acquisition(object):
 
 
     def save_flash_glm(self, remove_download=True):
-        create_flash_dataframe(remove_download=remove_download)
+        create_flash_dataframe(self.download_out, remove_download=remove_download)
 
-    def create_dataframe(self):
-        def get_files(dir_download):
-            try:
-                if dir_download is None:
-                    raise TypeError('You need to enter a path!')
-                files = os.listdir(dir_download)
-            except FileNotFoundError:
-                raise Exception('You need to enter a valid path!')
-
-            files = sorted([os.path.join(dir_download, file) for file in files])
-            files = list(filter(lambda file: file.endswith('.nc'), files))
-
-            return files
-
+    def create_dataframe(self, product='flash'):
         if 'GLM' in self.sensor:
-            glm_functions.create_flash_dataframe(self.csv_filename)
+            if product == 'flash':
+                create_flash_dataframe(self.download_out, self.csvfile_out, self.csv_filename)
+            else:
+                print('No functions to create CSV file')
+        else:
+            print('No functions to create CSV file')
 
     def remove_files(dir_download):
         print('remove ', dir_download)

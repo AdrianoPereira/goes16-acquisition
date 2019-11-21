@@ -4,12 +4,12 @@ from core import os
 from core import pandas as pd
 
 
-def create_flash_dataframe(output_csv, csv_filename):
+def create_flash_dataframe(download_out, output_csv, csv_filename):
     def is_glm_file(self, file):
         file = file.split('/')[-1]
         return file.startswith('OR_GLM')
 
-    files = [os.path.join(output_csv, file) for file in os.listdir(output_csv)]
+    files = [os.path.join(download_out, file) for file in os.listdir(download_out)]
     files = list(filter(lambda file: is_glm_file(file), files))
 
     if len(files) == 0:
