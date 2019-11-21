@@ -1,13 +1,7 @@
 from core import os
-import subprocess as sp
-from datetime import datetime as dt
-from core.glm import *
-from core.model import Model
-from netCDF4 import Dataset
-from shapely.geometry import Point
-import os
-import pandas as pd
-from core.glm import glm_functions
+from core import subprocess as sp
+from core import datetime as dt
+from core.glm.glm_functions import create_flash_dataframe
 
 
 class Acquisition(object):
@@ -42,6 +36,10 @@ class Acquisition(object):
         download_path = query.split()[-1]
         download_files(self.download_out, download_path, filenames)
 
+
+    def save_flash_glm(self, remove_download=True):
+        create_flash_dataframe(remove_download=remove_download)
+
     def create_dataframe(self):
         def get_files(dir_download):
             try:
@@ -58,7 +56,6 @@ class Acquisition(object):
 
         if 'GLM' in self.sensor:
             glm_functions.create_flash_dataframe(self.csv_filename)
-
 
     def remove_files(dir_download):
         print('remove ', dir_download)
