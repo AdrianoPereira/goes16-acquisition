@@ -36,11 +36,13 @@ class Acquisition(object):
         download_path = query.split()[-1]
         download_files(self.download_out, download_path, filenames)
 
-
-    def save_flash_glm(self, remove_download=True):
-        create_flash_dataframe(self.download_out, remove_download=remove_download)
-
-    def create_dataframe(self, product='flash'):
+    def create_dataframe(self, product='flash', remove_download_files=True):
+        if not self.download_out:
+            raise Exception('You need to enter a download folder output <download_out>')
+        if not self.csvfile_out:
+            self.csvfile_out = './temp/csvfile'
+            print('You forgot to enter output CSV file directory')
+            print('CSV file will be saved in ', self.csvfile_out)
         if 'GLM' in self.sensor:
             if product == 'flash':
                 create_flash_dataframe(self.download_out, self.csvfile_out, self.csv_filename)
@@ -48,10 +50,12 @@ class Acquisition(object):
                 print('No functions to create CSV file')
         else:
             print('No functions to create CSV file')
+        if remove_download_files:
+            self.remove_files()
 
-    def remove_files(dir_download):
-        print('remove ', dir_download)
-        os.system("rm -rf %s" % (dir_download))
+    def remove_files(self):
+        print('remove ', self.download_out)
+        os.system("rm -rf %s" % (self.download_out))
 
 
 def download_files(download_out, download_path, filenames):

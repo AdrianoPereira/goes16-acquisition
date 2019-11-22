@@ -5,7 +5,7 @@ from core import pandas as pd
 
 
 def create_flash_dataframe(download_out, output_csv, csv_filename):
-    def is_glm_file(self, file):
+    def is_glm_file(file):
         file = file.split('/')[-1]
         return file.startswith('OR_GLM')
 
