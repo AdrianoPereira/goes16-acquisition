@@ -2,6 +2,7 @@ import sys; sys.path.insert(0, '/home/adriano/goes16-acquisition')
 from goes16downloader._exceptions import *
 import os
 import subprocess as sp
+from string import Template
 
 
 class Downloader:
@@ -16,9 +17,27 @@ class Downloader:
         self.remote_url = kwargs.get('remote_url', None)
         self.filename = kwargs.get('filename', None)
         self.token = None
+        self.instrument = None
 
     def initializer(self) -> None:
         pass
+
+    def download_files(self):
+        for file in self.files_to_download:
+            args = dict(remote_url=self.remote_url, file=file,
+                        directory=self.directory)
+            local_url = Template(
+                "$directory$file"
+            ).substitute(**args)
+
+            if not os.path.exists(local_url):
+                query_download = Template(
+                    "aws s3 cp s3://$remote_url$file $directory"
+                ).substitute(**args)
+                out = sp.Popen([query_download], shell=True, stdout=sp.PIPE)
+                _ = out.communicate()[0].decode('utf-8')
+            else:
+                print('File %s alread exists'%file)
 
     def set_remote_url(self) -> None:
         pass
@@ -40,7 +59,7 @@ class Downloader:
 
         if _minute % 10 == 0 and _minute > 0:
             _minute = list(range(_minute - 10, _minute + 1))
-            return dict(julian_day='%s' % str(_julian_day).zfill(3),
+            return dict(year=_year, julian_day='%s' % str(_julian_day).zfill(3),
                         hour='%s' % str(_hour).zfill(2),
                         minute=[str(x).zfill(2) for x in _minute])
         if _minute < 10:
@@ -61,11 +80,11 @@ class Downloader:
             _julian_day -= 1
             _hour = 23
 
-        return dict(julian_day='%s' % str(_julian_day).zfill(3),
+        return dict(year=_year, julian_day='%s' % str(_julian_day).zfill(3),
                     hour='%s' % str(_hour).zfill(2),
                     minute=_minute)
 
-    def select_files(self, query, time):
+    def get_and_select_files(self):
         def contains(filename, filters):
             if not filename.endswith('.nc'):
                 return False
@@ -76,10 +95,11 @@ class Downloader:
 
             return False
 
-        filters = ['_s%s%s%s%s' % (time['y'], time['d'], time['h'], m) for m in
-                   time['m']]
+        filters = ['_s%s%s%s%s' % (self.time['year'], self.time['julian_day'],
+                                   self.time['hour'], m) for m in
+                   self.time['minute']]
 
-        out = sp.Popen([query], shell=True, stdout=sp.PIPE)
+        out = sp.Popen([self.query_base], shell=True, stdout=sp.PIPE)
         out = out.communicate()[0].decode('utf-8')
         files = out.split()
         filenames = sorted(
@@ -99,11 +119,6 @@ class Downloader:
     #     except DateRequiredError as err:
     #         print(err)
     #
-    # def make_directory(self) -> None:
-    #     try:
-    #         if not self.has_directory():
-    #             raise DirectoryRequiredError
-    #         if not os.path.exists(self.directory):
-    #             os.makedirs(self.directory)
-    #     except DirectoryRequiredError as err:
-    #         print(err)
+    def make_directory(self) -> None:
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
