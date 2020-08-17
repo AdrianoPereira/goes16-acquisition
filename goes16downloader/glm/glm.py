@@ -46,7 +46,7 @@ class GLMDownloader(Downloader):
 
 
 if __name__ == "__main__":
-    info = dict(year=2020, month=8, day=11, hour=0, minute=0)
+    info = dict(year=2020, month=8, day=14, hour=20, minute=0)
     glm = GLMDownloader(**info)
 
 
