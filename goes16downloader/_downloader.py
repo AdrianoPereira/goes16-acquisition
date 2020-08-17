@@ -1,5 +1,4 @@
 import sys; sys.path.insert(0, '/home/adriano/goes16-acquisition')
-from goes16downloader._exceptions import *
 import os
 import subprocess as sp
 from string import Template

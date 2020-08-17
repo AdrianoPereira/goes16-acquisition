@@ -37,7 +37,6 @@ class ABIDownloader(Downloader):
         self.files_to_download = self.get_and_select_files()
         self.download_files()
 
-
     def get_julian_day(self):
         return str(dt.datetime.strptime('%s-%s-%s' % (self.year, self.month,
                                                       self.day), '%Y-%m-%d').\
