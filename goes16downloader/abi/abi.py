@@ -30,11 +30,12 @@ class ABIDownloader(Downloader):
                  for minute in self.time['minute']]
         self.directory = INSTRUMENT_LOCAL_PATH.substitute(**self.ARGS)
         self.make_directory()
-        self.query_base = GLM_QUERY_LIST_FILES.substitute(self.time)
+        self.query_base = QUERY_LIST_FILES.substitute(
+            **self.time, instrument=self.instrument
+        )
         self.remote_url = self.query_base.split(' ')[-1]
         self.files_to_download = self.get_and_select_files()
         self.download_files()
-
 
 
     def get_julian_day(self):
@@ -45,7 +46,7 @@ class ABIDownloader(Downloader):
 
 if __name__ == "__main__":
     info = dict(year=2020, month=8, day=11, hour=0, minute=0)
-    glm = GLMDownloader(**info)
+    glm = ABIDownloader(**info)
 
 
 
