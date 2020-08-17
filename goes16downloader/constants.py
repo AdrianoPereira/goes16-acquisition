@@ -9,7 +9,6 @@ INSTRUMENT_LOCAL_PATH = Template(
     )
 )
 
-GLM_QUERY_LIST_FILES = Template(
-    "aws s3 ls noaa-goes16/GLM-L2-LCFA/$year/$julian_day/$hour/"
+QUERY_LIST_FILES = Template(
+    "aws s3 ls noaa-goes16/$instrument/$year/$julian_day/$hour/"
 )
-

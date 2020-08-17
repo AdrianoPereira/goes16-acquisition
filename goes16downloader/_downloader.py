@@ -24,6 +24,7 @@ class Downloader:
 
     def download_files(self):
         for file in self.files_to_download:
+            print('Downloading %s...', file)
             args = dict(remote_url=self.remote_url, file=file,
                         directory=self.directory)
             local_url = Template(
@@ -107,18 +108,6 @@ class Downloader:
 
         return filenames
 
-    # def set_directory(self, instrument: str) -> None:
-    #     try:
-    #         if not self.has_date():
-    #             raise DateRequiredError
-    #         self.directory = INSTRUMENT_LOCAL_PATH.substitute(
-    #             instrument=instrument,
-    #             year=self.year,
-    #             month=self.month,
-    #             day=self.day)
-    #     except DateRequiredError as err:
-    #         print(err)
-    #
     def make_directory(self) -> None:
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
