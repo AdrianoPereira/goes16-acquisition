@@ -31,15 +31,15 @@ def get_list_datetimes():
 
 def download_abi_files(list_datetimes):
     for datetime in list_datetimes:
-        ABIDownloader(**datetime)
+        ABIDownloader(**datetime, channels=[8, 13])
 
 
 def download_glm_files(list_datetimes):
     for datetime in list_datetimes:
-        ABIDownloader(**datetime)
+        GLMDownloader(**datetime)
 
 
 if __name__ == "__main__":
     list_datetimes = get_list_datetimes()
-    download_glm_files(list_datetimes)
+    # download_glm_files(list_datetimes)
     download_abi_files(list_datetimes)

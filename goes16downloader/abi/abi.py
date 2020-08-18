@@ -8,7 +8,7 @@ class ABIDownloader(Downloader):
     def __init__(self, **kwargs):
         super(ABIDownloader, self).__init__(**kwargs)
         self.time = kwargs.get('time', None)
-        self.instrument = 'ABI-L2-MCMIPF'
+        self.instrument = 'ABI-L2-CMIPF'
         self.ARGS = dict(year=self.year, month=str(self.month).zfill(2),
                          day=str(self.day).zfill(2),
                          julian_day=str(self.julian_day).zfill(3),
@@ -17,11 +17,15 @@ class ABIDownloader(Downloader):
                          instrument=self.instrument,
                          remote_url=self.remote_url, directory=self.directory)
         self.query_base = list()
+        self.channels = kwargs.get('channels', range(1, 17))
         self.initializer()
         self.files_to_download = []
         self.directory = None
 
     def initializer(self) -> None:
+        self.channels = ['OR_ABI-L2-CMIPF-M6C%s_'%str(channel).zfill(2) for
+                         channel in self.channels]
+
         self.julian_day = self.get_julian_day()
         self.time = self.format_time()
 
@@ -35,7 +39,9 @@ class ABIDownloader(Downloader):
         )
         self.remote_url = self.query_base.split(' ')[-1]
         self.files_to_download = self.get_and_select_files()
-        self.download_files()
+        print(self.channels)
+        print(self.directory)
+        # self.download_files()
 
     def get_julian_day(self):
         return str(dt.datetime.strptime('%s-%s-%s' % (self.year, self.month,
@@ -45,7 +51,7 @@ class ABIDownloader(Downloader):
 
 if __name__ == "__main__":
     info = dict(year=2020, month=8, day=14, hour=20, minute=0)
-    glm = ABIDownloader(**info)
+    glm = ABIDownloader(**info, channels=[8, 13])
 
 
 

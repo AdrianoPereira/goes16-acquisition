@@ -35,6 +35,7 @@ class GLMDownloader(Downloader):
         )
         self.remote_url = self.query_base.split(' ')[-1]
         self.files_to_download = self.get_and_select_files()
+
         self.download_files()
 
 

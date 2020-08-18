@@ -86,7 +86,8 @@ class Downloader:
 
     def get_and_select_files(self):
         def contains(filename, filters):
-            if not filename.endswith('.nc'):
+            if not filename.endswith('.nc') or \
+                    filename[:22] not in self.channels:
                 return False
 
             for f in filters:
