@@ -86,9 +86,13 @@ class Downloader:
 
     def get_and_select_files(self):
         def contains(filename, filters):
-            if not filename.endswith('.nc') or \
-                    filename[:22] not in self.channels:
-                return False
+            if self.instrument == 'GLM-L2-LCFA':
+                if not filename.endswith('.nc'):
+                    return False
+            else:
+                if not filename.endswith('.nc') or \
+                        filename[:22] not in self.channels:
+                    return False
 
             for f in filters:
                 if f in filename:

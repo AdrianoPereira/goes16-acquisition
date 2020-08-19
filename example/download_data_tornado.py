@@ -42,4 +42,8 @@ def download_glm_files(list_datetimes):
 if __name__ == "__main__":
     list_datetimes = get_list_datetimes()
     # download_glm_files(list_datetimes)
-    download_abi_files(list_datetimes)
+    # download_abi_files(list_datetimes)
+
+    datetime = dict(year=2020, month=8, day=16, hour=0,
+                    minute=0)
+    GLMDownloader(**datetime)
